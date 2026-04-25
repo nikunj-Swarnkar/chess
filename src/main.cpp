@@ -20,7 +20,17 @@ void drawBoard()
         }
     }
 }
-
+void printBoardState()
+{
+    Serial.println(" Current Board State:");
+    for (int i = 0;i <64;i++) {
+        Serial.print(game.board[i]);
+        Serial.print(" ");
+        if ((i + 1) % 8 == 0) {
+            Serial.println();
+        }
+    }
+}
 void setup() {
     Serial.begin(115200);
 
@@ -39,7 +49,9 @@ void setup() {
     else{
         Serial.println("Pawn moved successfully!");
     }
-
+    
+    printBoardState();
+    
     tft.init();
     tft.setRotation(1);
     tft.fillScreen(TFT_BLACK);
