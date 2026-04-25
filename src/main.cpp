@@ -25,7 +25,20 @@ void drawBoard()
         }
     }
 }
+void drawTurnInfo()
+{
+    chess_team_t team = chess_turn(&game);
 
+    tft.setTextColor(TFT_WHITE);
+    tft.fillRect(0,240,240,80,TFT_DARKGREY);
+
+    if(team == CHESS_WHITE){
+        tft.drawString("WHITE TURN",10,260,2);
+    }
+    else{
+        tft.drawString("BLACK TURN",10,260,2);
+    }
+}
 void drawPieces()
 {
     int squareSize = 30; // Size of each square on the chessboard
