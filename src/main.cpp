@@ -3,6 +3,9 @@
 #include "chess.h"
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 chess_game_t game;
+int cursorX = 0;
+int cursorY = 0;
+bool pieceSelected = false;
 chess_index_t validmoves[64];
 size_t validmovecount=0;
 int selectedIndex = -1;
@@ -85,7 +88,6 @@ void drawValidMoves()
 void drawCursor()
 {
     int squareSize = 30; // Size of each square on the chessboard
-    int squareSize = 30; // Size of each square on the chessboard
     int x = cursorX * squareSize;
     int y = cursorY * squareSize;
     tft.drawRect(x, y, squareSize, squareSize, TFT_GREEN);
@@ -108,9 +110,7 @@ void printBoardState()
     }
 }
 
-int cursorX = 0;
-int cursorY = 0;
-bool pieceSelected = false;
+
 
 void setup() {
     Serial.begin(115200);
@@ -146,29 +146,72 @@ void loop()
 {
     delay(1000);
 
+    cursorX++;
+
+    if(cursorX >= 8){
+        cursorX = 0;
+        cursorY++;
+    }
+
+    if(cursorY >= 8){
+        cursorY = 0;
+    }
+
     int currentIndex = cursorY * 8 + cursorX;
 
-    if(!pieceSelected){
-        selectedIndex = currentIndex;
+    if(!pieceSelected)
+    {
+        // select piece if square has one
+        if(game.board[currentIndex] != CHESS_NONE)
+        {
+            selectedIndex = currentIndex;
 
-        validmovecount = chess_compute_moves(
-            &game,
-            selectedIndex,
-            validmoves
-        );
+            validmovecount = chess_compute_moves(
+                &game,
+                selectedIndex,
+                validmoves
+            );
 
-        pieceSelected = true;
+            if(validmovecount > 0)
+            {
+                pieceSelected = true;
 
-        Serial.println("Piece selected");
+                Serial.print("Selected piece at: ");
+                Serial.println(selectedIndex);
+            }
+        }
     }
-    else{
-        pieceSelected = false;
-        validmovecount = 0;
+    else
+    {
+        // check if current square is valid destination
+        bool validTarget = false;
 
-        Serial.println("Selection cleared");
+        for(size_t i = 0; i < validmovecount; i++)
+        {
+            if(validmoves[i] == currentIndex)
+            {
+                validTarget = true;
+                break;
+            }
+        }
+
+        if(validTarget)
+        {
+            chess_move(&game, selectedIndex, currentIndex);
+
+            Serial.print("Moved piece from ");
+            Serial.print(selectedIndex);
+            Serial.print(" to ");
+            Serial.println(currentIndex);
+
+            pieceSelected = false;
+            validmovecount = 0;
+            selectedIndex = -1;
+        }
     }
 
     tft.fillScreen(TFT_BLACK);
+
     drawBoard();
     drawPieces();
     drawValidMoves();
