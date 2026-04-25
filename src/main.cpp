@@ -30,8 +30,8 @@ void drawPieces()
         if (id != CHESS_NONE) {
             int row = i / 8;
             int col = i % 8;
-            int x = col * squareSize + 10;
-            int y = row * squareSize + 10;
+            int x = col * squareSize + 8;
+            int y = row * squareSize + 6;
             char symbol = '?';
             switch (CHESS_TYPE(id)) {
                 case CHESS_PAWN:
@@ -61,9 +61,21 @@ void drawPieces()
             {
                 tft.setTextColor(TFT_RED);
             }
-            
             tft.drawChar(symbol, x, y, 2);
         }
+    }
+}
+
+void drawCursor()
+{
+    int squareSize = 30; // Size of each square on the chessboard
+    int x = cursorX * squareSize;
+    int y = cursorY * squareSize;
+    tft.drawRect(x, y, squareSize, squareSize, TFT_GREEN);
+
+    if(pieceSelected)
+    {
+        tft.drawRect(x + 2, y + 2, squareSize - 4, squareSize - 4, TFT_YELLOW);
     }
 }
 
@@ -78,6 +90,11 @@ void printBoardState()
         }
     }
 }
+
+int cursorX = 0;
+int cursorY = 0;
+bool pieceSelected = false;
+
 void setup() {
     Serial.begin(115200);
 
@@ -105,10 +122,24 @@ void setup() {
 
     drawBoard();
     drawPieces();
+    drawCursor();
 }
 
 void loop()
 {
-    // Main game loop
-    // Here you would handle user input, update the game state, and redraw the board as needed
+    delay(1000);
+
+    cursorX++;
+    if(cursorX >= 8)    {
+        cursorX = 0;
+    }
+        cursorY++;
+        if(cursorY >= 8) {
+            cursorY = 0;    
+        }
+
+        tft.fillScreen(TFT_BLACK);
+        drawBoard();
+        drawPieces();
+        drawCursor();
 }
