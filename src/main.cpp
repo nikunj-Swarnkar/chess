@@ -20,6 +20,53 @@ void drawBoard()
         }
     }
 }
+
+void drawPieces()
+{
+    int squareSize = 30; // Size of each square on the chessboard
+
+    for (int i = 0; i < 64; i++) {
+        chess_id_t id = game.board[i];
+        if (id != CHESS_NONE) {
+            int row = i / 8;
+            int col = i % 8;
+            int x = col * squareSize + 10;
+            int y = row * squareSize + 10;
+            char symbol = '?';
+            switch (CHESS_TYPE(id)) {
+                case CHESS_PAWN:
+                    symbol = 'P';
+                    break;
+                case CHESS_KNIGHT:
+                    symbol = 'N';
+                    break;    
+                case CHESS_BISHOP:
+                    symbol = 'B';
+                    break;
+                case CHESS_ROOK:
+                    symbol = 'R';
+                    break;
+                case CHESS_QUEEN:
+                    symbol = 'Q';
+                    break;
+                case CHESS_KING:
+                    symbol = 'K';
+                    break;  
+            }
+            if(CHESS_TEAM(id) == CHESS_WHITE)
+            {
+                tft.setTextColor(TFT_BLUE);
+            }
+            else
+            {
+                tft.setTextColor(TFT_RED);
+            }
+            
+            tft.drawChar(symbol, x, y, 2);
+        }
+    }
+}
+
 void printBoardState()
 {
     Serial.println(" Current Board State:");
@@ -51,13 +98,15 @@ void setup() {
     }
     
     printBoardState();
-    
+
     tft.init();
     tft.setRotation(1);
     tft.fillScreen(TFT_BLACK);
 
     drawBoard();
+    drawPieces();
 }
+
 void loop()
 {
     // Main game loop
