@@ -3,7 +3,9 @@
 #include "chess.h"
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 chess_game_t game;
-
+chess_index_t validmoves[64];
+size_t validmovecount=0;
+int selectedIndex = -1;
 void drawBoard()
 {
  
@@ -66,8 +68,23 @@ void drawPieces()
     }
 }
 
+void drawValidMoves()
+{
+    int squareSize = 30; // Size of each square on the chessboard
+    for(size_t i = 0; i < validmovecount; i++)
+    {
+        chess_index_t moveIndex = validmoves[i];
+        int row = moveIndex / 8;
+        int col = moveIndex % 8;
+        int x = col * squareSize;
+        int y = row * squareSize;
+        tft.drawCircle(x + squareSize / 2, y + squareSize / 2, 5, TFT_YELLOW);
+    }
+}
+
 void drawCursor()
 {
+    int squareSize = 30; // Size of each square on the chessboard
     int squareSize = 30; // Size of each square on the chessboard
     int x = cursorX * squareSize;
     int y = cursorY * squareSize;
@@ -129,17 +146,31 @@ void loop()
 {
     delay(1000);
 
-    cursorX++;
-    if(cursorX >= 8)    {
-        cursorX = 0;
-    }
-        cursorY++;
-        if(cursorY >= 8) {
-            cursorY = 0;    
-        }
+    int currentIndex = cursorY * 8 + cursorX;
 
-        tft.fillScreen(TFT_BLACK);
-        drawBoard();
-        drawPieces();
-        drawCursor();
+    if(!pieceSelected){
+        selectedIndex = currentIndex;
+
+        validmovecount = chess_compute_moves(
+            &game,
+            selectedIndex,
+            validmoves
+        );
+
+        pieceSelected = true;
+
+        Serial.println("Piece selected");
+    }
+    else{
+        pieceSelected = false;
+        validmovecount = 0;
+
+        Serial.println("Selection cleared");
+    }
+
+    tft.fillScreen(TFT_BLACK);
+    drawBoard();
+    drawPieces();
+    drawValidMoves();
+    drawCursor();
 }
