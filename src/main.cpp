@@ -21,18 +21,31 @@ void drawBoard()
     }
 }
 
-void setup()
-{
+void setup() {
     Serial.begin(115200);
 
     chess_init(&game);
-    tft.init();
-    tft.setRotation(1); // Set the display rotation if needed
-    tft.fillScreen(TFT_BLACK); // Clear the screen
-    drawBoard(); // Draw the chessboard
-    Serial.println("Chess game initialized and started!.");
-}
 
+    Serial.println("Chess initialized!");
+
+    chess_index_t from = 12;
+    chess_index_t to = 28;
+
+    chess_index_t result = chess_move(&game, from, to);
+
+    if(result == -2){
+        Serial.println("Invalid move!");
+    }
+    else{
+        Serial.println("Pawn moved successfully!");
+    }
+
+    tft.init();
+    tft.setRotation(1);
+    tft.fillScreen(TFT_BLACK);
+
+    drawBoard();
+}
 void loop()
 {
     // Main game loop
