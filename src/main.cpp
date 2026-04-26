@@ -25,6 +25,35 @@ void drawBoard()
         }
     }
 }
+
+void checkGameStatus()
+{
+    chess_status_t whiteStatus;
+    chess_status_t blackStatus;
+
+    chess_status(&game, &whiteStatus, &blackStatus);
+
+    if(whiteStatus == CHESS_CHECK){
+        Serial.println("White is in Check!");
+    }
+    else if(whiteStatus == CHESS_CHECKMATE){
+        Serial.println("White is in Checkmate!");
+    }
+    else if(whiteStatus == CHESS_STALEMATE){
+        Serial.println("White is in Stalemate!");
+    }
+
+    if(blackStatus == CHESS_CHECK){
+        Serial.println("Black is in Check!");
+    }
+    else if(blackStatus == CHESS_CHECKMATE){
+        Serial.println("Black is in Checkmate!");
+    }
+    else if(blackStatus == CHESS_STALEMATE){
+        Serial.println("Black is in Stalemate!");
+    }
+}
+
 void drawTurnInfo()
 {
     chess_team_t team = chess_turn(&game);
@@ -211,6 +240,8 @@ void loop()
         if(validTarget)
         {
             chess_move(&game, selectedIndex, currentIndex);
+
+            checkGameStatus();
 
             Serial.print("Moved piece from ");
             Serial.print(selectedIndex);
