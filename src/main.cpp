@@ -115,22 +115,27 @@ void saveGame()
 
 void loadGame()
 {
-      bool hasSave = prefs.isKey("0");
-
     prefs.begin("chess", true);
+
+    bool hasSave = prefs.isKey("0");
+
     if(!hasSave)
     {
         Serial.println("No saved game found.");
         prefs.end();
         return;
     }
+
     for(int i = 0; i < 64; i++)
     {
         game.board[i] = prefs.getInt(String(i).c_str(), CHESS_NONE);
     }
+
     int turn = prefs.getInt("turn", CHESS_WHITE);
-    game.turn = (chess_team_t) turn;
+    game.turn = (chess_team_t)turn;
+
     prefs.end();
+
     Serial.println("Game loaded!");
 }
 
@@ -246,19 +251,7 @@ void setup() {
 
     Serial.println("Chess initialized!");
 
-    chess_index_t from = 12;
-    chess_index_t to = 28;
 
-    chess_index_t result = chess_move(&game, from, to);
-
-    if(result == -2){
-        Serial.println("Invalid move!");
-    }
-    else{
-        Serial.println("Pawn moved successfully!");
-    }
-    
-    printBoardState();
 
     tft.init();
     tft.setRotation(1);
