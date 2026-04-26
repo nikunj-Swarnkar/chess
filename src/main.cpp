@@ -20,6 +20,7 @@ const int BTN_SELECT = 11;
 
 unsigned long lastButtonPress = 0;
 const int debounceDelay = 200;
+const int BATTERY_PIN = 3;
 enum GameState
 {
     MENU,
@@ -139,6 +140,29 @@ void loadGame()
     Serial.println("Game loaded!");
 }
 
+float getBatteryVoltage()
+{
+    int raw = analogRead(BATTERY_PIN);
+
+    float voltage = (raw / 4095.0) * 3.3;
+
+    // For 100k/100k voltage divider
+    voltage *= 2.0;
+
+    return voltage;
+}
+
+int getBatteryPercent()
+{
+    float voltage = getBatteryVoltage();
+
+    int percent = map(voltage * 100, 330, 420, 0, 100);
+
+    percent = constrain(percent, 0, 100);
+
+    return percent;
+}
+
 void drawTurnInfo()
 {
     chess_team_t team = chess_turn(&game);
@@ -146,12 +170,21 @@ void drawTurnInfo()
     tft.setTextColor(TFT_WHITE);
     tft.fillRect(0,240,240,80,TFT_DARKGREY);
 
-    if(team == CHESS_WHITE){
-        tft.drawString("WHITE TURN",10,260,2);
-    }
-    else{
-        tft.drawString("BLACK TURN",10,260,2);
-    }
+   int battery = getBatteryPercent();
+
+if(team == CHESS_WHITE){
+    tft.drawString("WHITE TURN",10,260,2);
+}
+else{
+    tft.drawString("BLACK TURN",10,260,2);
+}
+
+tft.drawString(
+    "BAT: " + String(battery) + "%",
+    150,
+    260,
+    2
+);
 }
 void drawPieces()
 {
@@ -197,7 +230,15 @@ void drawPieces()
         }
     }
 }
-
+void redrawGame()
+{
+    tft.fillScreen(TFT_BLACK);
+    drawBoard();
+    drawPieces();
+    drawValidMoves();
+    drawCursor();
+    drawTurnInfo();
+}
 void drawValidMoves()
 {
     int squareSize = 30; // Size of each square on the chessboard
@@ -236,7 +277,12 @@ void printBoardState()
         }
     }
 }
-
+float getBatteryVoltage()
+{
+    int rawValue = analogRead(BATTERY_PIN);
+    float voltage = (rawValue / 4095.0) * 3.3 * 2; // Assuming a voltage divider with equal resistors
+    return voltage;
+}
 
 
 void setup() {
@@ -245,6 +291,7 @@ void setup() {
     pinMode(BTN_LEFT, INPUT_PULLUP);
     pinMode(BTN_RIGHT, INPUT_PULLUP);
     pinMode(BTN_SELECT, INPUT_PULLUP);
+    pinMode(BATTERY_PIN, INPUT);
     Serial.begin(115200);
 
     chess_init(&game);
@@ -421,12 +468,6 @@ Serial.println("Move cancelled");                }
         }
 
         lastButtonPress = millis();
-
-        tft.fillScreen(TFT_BLACK);
-        drawBoard();
-        drawPieces();
-        drawValidMoves();
-        drawCursor();
-        drawTurnInfo();
+        redrawGame(); 
     }
 }
