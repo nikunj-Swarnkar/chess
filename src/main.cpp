@@ -370,7 +370,10 @@ void loop()
 
             if(!pieceSelected)
             {
-                if(game.board[currentIndex] != CHESS_NONE)
+                if(
+    game.board[currentIndex] != CHESS_NONE &&
+    CHESS_TEAM(game.board[currentIndex]) == chess_turn(&game)
+)
                 {
                     selectedIndex = currentIndex;
 
@@ -409,8 +412,11 @@ void loop()
                 }
                 else
                 {
-                    Serial.println("Invalid move target!");
-                }
+pieceSelected = false;
+validmovecount = 0;
+selectedIndex = -1;
+
+Serial.println("Move cancelled");                }
             }
         }
 
