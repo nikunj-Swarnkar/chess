@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include "chess.h"
+#include <Preferences.h>
+Preferences prefs;
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 chess_game_t game;
 int cursorX = 0;
@@ -98,6 +100,38 @@ void checkGameStatus()
     else if(blackStatus == CHESS_STALEMATE){
         Serial.println("Black is in Stalemate!");
     }
+}
+void saveGame()
+{
+    prefs.begin("chess", false);
+    for(int i = 0; i < 64; i++)
+    {
+        prefs.putInt(String(i).c_str(), game.board[i]);
+    }
+    prefs.putInt("turn", chess_turn(&game));
+    prefs.end();
+    Serial.println("Game saved!");
+}
+
+void loadGame()
+{
+      bool hasSave = prefs.isKey("0");
+
+    prefs.begin("chess", true);
+    if(!hasSave)
+    {
+        Serial.println("No saved game found.");
+        prefs.end();
+        return;
+    }
+    for(int i = 0; i < 64; i++)
+    {
+        game.board[i] = prefs.getInt(String(i).c_str(), CHESS_NONE);
+    }
+    int turn = prefs.getInt("turn", CHESS_WHITE);
+    game.turn = (chess_team_t) turn;
+    prefs.end();
+    Serial.println("Game loaded!");
 }
 
 void drawTurnInfo()
@@ -263,20 +297,40 @@ void loop()
             }
 
             else if(digitalRead(BTN_SELECT) == LOW)
-            {
-                if(menuIndex == 0)
-                {
-                    currentState = PLAYING;
+{
+    if(menuIndex == 0)   // Play new game
+    {
+        chess_init(&game);
 
-                    tft.fillScreen(TFT_BLACK);
-                    drawBoard();
-                    drawPieces();
-                    drawCursor();
-                    drawTurnInfo();
-                }
+        currentState = PLAYING;
 
-                lastButtonPress = millis();
-            }
+        tft.fillScreen(TFT_BLACK);
+        drawBoard();
+        drawPieces();
+        drawCursor();
+        drawTurnInfo();
+    }
+
+    else if(menuIndex == 1)   // Settings
+    {
+        Serial.println("Settings coming soon...");
+    }
+
+    else if(menuIndex == 2)   // Resume saved game
+    {
+        loadGame();
+
+        currentState = PLAYING;
+
+        tft.fillScreen(TFT_BLACK);
+        drawBoard();
+        drawPieces();
+        drawCursor();
+        drawTurnInfo();
+    }
+
+    lastButtonPress = millis();
+}
         }
 
         return;
@@ -353,7 +407,7 @@ void loop()
                 if(validTarget)
                 {
                     chess_move(&game, selectedIndex, currentIndex);
-
+                    saveGame();
                     checkGameStatus();
 
                     pieceSelected = false;
