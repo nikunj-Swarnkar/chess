@@ -5,10 +5,56 @@ TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 chess_game_t game;
 int cursorX = 0;
 int cursorY = 0;
+
 bool pieceSelected = false;
 chess_index_t validmoves[64];
 size_t validmovecount=0;
 int selectedIndex = -1;
+const int BTN_UP = 1;
+const int BTN_DOWN = 2;
+const int BTN_LEFT = 4;
+const int BTN_RIGHT = 5;
+const int BTN_SELECT = 11;
+
+unsigned long lastButtonPress = 0;
+const int debounceDelay = 200;
+enum GameState
+{
+    MENU,
+    PLAYING,
+    SETTINGS,
+    GAME_OVER
+};
+GameState currentState = MENU;
+int menuIndex = 0;
+void drawMenu()
+{ 
+    
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextColor(TFT_WHITE);
+    tft.drawString("pocket chess:", 50, 50, 4);
+    String options[3] = {
+        "play",
+        "settings",
+        "resume"
+    };
+    
+
+for(int i = 0; i < 3; i++)
+{
+    if(i == menuIndex)
+    {
+        tft.setTextColor(TFT_YELLOW);
+        tft.drawString("> " + options[i], 40, 120 + (i * 40), 2);
+    }
+    else
+    {
+        tft.setTextColor(TFT_WHITE);
+        tft.drawString(options[i], 40, 120 + (i * 40), 2);
+    }
+   
+}
+}
 void drawBoard()
 {
  
@@ -155,6 +201,11 @@ void printBoardState()
 
 
 void setup() {
+    pinMode(BTN_UP, INPUT_PULLUP);
+    pinMode(BTN_DOWN, INPUT_PULLUP);
+    pinMode(BTN_LEFT, INPUT_PULLUP);
+    pinMode(BTN_RIGHT, INPUT_PULLUP);
+    pinMode(BTN_SELECT, INPUT_PULLUP);
     Serial.begin(115200);
 
     chess_init(&game);
@@ -179,85 +230,150 @@ void setup() {
     tft.setRotation(1);
     tft.fillScreen(TFT_BLACK);
 
-    drawBoard();
-    drawPieces();
-    drawCursor();
+   drawMenu();
 }
 
 void loop()
 {
-    delay(1000);
-
-    cursorX++;
-
-    if(cursorX >= 8){
-        cursorX = 0;
-        cursorY++;
-    }
-
-    if(cursorY >= 8){
-        cursorY = 0;
-    }
-
-    int currentIndex = cursorY * 8 + cursorX;
-
-    if(!pieceSelected)
+    // ---------------- MENU ----------------
+    if(currentState == MENU)
     {
-        // select piece if square has one
-        if(game.board[currentIndex] != CHESS_NONE)
+        if(millis() - lastButtonPress > debounceDelay)
         {
-            selectedIndex = currentIndex;
-
-            validmovecount = chess_compute_moves(
-                &game,
-                selectedIndex,
-                validmoves
-            );
-
-            if(validmovecount > 0)
+            if(digitalRead(BTN_UP) == LOW)
             {
-                pieceSelected = true;
+                if(menuIndex > 0)
+                {
+                    menuIndex--;
+                }
 
-                Serial.print("Selected piece at: ");
-                Serial.println(selectedIndex);
+                drawMenu();
+                lastButtonPress = millis();
             }
-        }
-    }
-    else
-    {
-        // check if current square is valid destination
-        bool validTarget = false;
 
-        for(size_t i = 0; i < validmovecount; i++)
-        {
-            if(validmoves[i] == currentIndex)
+            else if(digitalRead(BTN_DOWN) == LOW)
             {
-                validTarget = true;
-                break;
+                if(menuIndex < 2)
+                {
+                    menuIndex++;
+                }
+
+                drawMenu();
+                lastButtonPress = millis();
+            }
+
+            else if(digitalRead(BTN_SELECT) == LOW)
+            {
+                if(menuIndex == 0)
+                {
+                    currentState = PLAYING;
+
+                    tft.fillScreen(TFT_BLACK);
+                    drawBoard();
+                    drawPieces();
+                    drawCursor();
+                    drawTurnInfo();
+                }
+
+                lastButtonPress = millis();
             }
         }
 
-        if(validTarget)
-        {
-            chess_move(&game, selectedIndex, currentIndex);
-
-            checkGameStatus();
-
-            Serial.print("Moved piece from ");
-            Serial.print(selectedIndex);
-            Serial.print(" to ");
-            Serial.println(currentIndex);
-
-            pieceSelected = false;
-            validmovecount = 0;
-            selectedIndex = -1;
-        }
+        return;
     }
 
-    tft.fillScreen(TFT_BLACK);
+    // ---------------- GAMEPLAY ----------------
+    if(millis() - lastButtonPress > debounceDelay)
+    {
+        if(digitalRead(BTN_UP) == LOW)
+        {
+            if(cursorY > 0)
+            {
+                cursorY--;
+            }
+        }
 
-    drawBoard();
-    drawPieces();
-    drawValidMoves();
-    drawCursor();
+        else if(digitalRead(BTN_DOWN) == LOW)
+        {
+            if(cursorY < 7)
+            {
+                cursorY++;
+            }
+        }
+
+        else if(digitalRead(BTN_LEFT) == LOW)
+        {
+            if(cursorX > 0)
+            {
+                cursorX--;
+            }
+        }
+
+        else if(digitalRead(BTN_RIGHT) == LOW)
+        {
+            if(cursorX < 7)
+            {
+                cursorX++;
+            }
+        }
+
+        else if(digitalRead(BTN_SELECT) == LOW)
+        {
+            int currentIndex = cursorY * 8 + cursorX;
+
+            if(!pieceSelected)
+            {
+                if(game.board[currentIndex] != CHESS_NONE)
+                {
+                    selectedIndex = currentIndex;
+
+                    validmovecount = chess_compute_moves(
+                        &game,
+                        selectedIndex,
+                        validmoves
+                    );
+
+                    pieceSelected = true;
+                    Serial.println("Piece selected");
+                }
+            }
+            else
+            {
+                bool validTarget = false;
+
+                for(size_t i = 0; i < validmovecount; i++)
+                {
+                    if(validmoves[i] == currentIndex)
+                    {
+                        validTarget = true;
+                        break;
+                    }
+                }
+
+                if(validTarget)
+                {
+                    chess_move(&game, selectedIndex, currentIndex);
+
+                    checkGameStatus();
+
+                    pieceSelected = false;
+                    validmovecount = 0;
+                    selectedIndex = -1;
+                }
+                else
+                {
+                    Serial.println("Invalid move target!");
+                }
+            }
+        }
+
+        lastButtonPress = millis();
+
+        tft.fillScreen(TFT_BLACK);
+        drawBoard();
+        drawPieces();
+        drawValidMoves();
+        drawCursor();
+        drawTurnInfo();
+    }
 }
