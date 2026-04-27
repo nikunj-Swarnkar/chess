@@ -143,7 +143,7 @@ Upload the code to your ESP32 and start playing.
 ## Credits
 
 Built for Hack Club Stasis.
-
+I based my project on https://github.com/codewitch-honey-crisis/pocket_chess work ! 
 ---
 
 ## License
