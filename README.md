@@ -12,21 +12,21 @@ Designed for **Hack Club Stasis**.
 
 # Project Renders
 
-## Front Render
+## Main Render
 
-![Front Render](docs/front_render.png)
+![Main Render](assets/finnal%20render.jpg)
 
-## Back Render
+## Transparent Lid Render
 
-![Back Render](docs/back_render.png)
+![Transparent Lid Render](assets/final%20render%20transparent%20lid.jpg)
 
-## Internal Layout
+## Inspiration Images
 
-![Internal Layout](docs/internal_layout.png)
+![Inspiration 1](assets/inspo.jpg)
 
-## Prototype
+![Inspiration 2](assets/inspo%202.jpg)
 
-![Prototype](docs/prototype.jpg)
+![Inspiration 3](assets/inspo%203.jpg)
 
 ---
 
@@ -47,11 +47,13 @@ The device is powered using a rechargeable LiPo battery with onboard charging su
 - Save/load support
 - Compact travel-friendly size
 
-### Assembled Device
+### Assembly Images
 
-![Assembly Front](docs/assembly_front.jpg)
+![Assembly 1](assets/assmebly%201.jpg)
 
-![Assembly Back](docs/assembly_back.jpg)
+![Assembly 2](assets/assembly%202.jpg)
+
+![Assembly 3](assets/assembly%203.jpg)
 
 ---
 
@@ -105,7 +107,7 @@ The device is powered using a rechargeable LiPo battery with onboard charging su
 
 The following diagram shows the wiring connections between the ESP32-S3, TFT display, buttons, and power system.
 
-![Wiring Diagram](docs/wiring_diagram.png)
+![Wiring Diagram](assets/schematic.png)
 
 ---
 
@@ -191,15 +193,15 @@ Pocket-Chess/
 │   ├── display.cpp
 │
 ├── assets/
-│   ├── chess_sprites/
-│
-├── docs/
-│   ├── wiring_diagram.png
-│   ├── front_render.png
-│   ├── back_render.png
-│   ├── internal_layout.png
-│   ├── assembly_front.jpg
-│   ├── assembly_back.jpg
+│   ├── assmebly 1.jpg
+│   ├── assembly 2.jpg
+│   ├── assembly 3.jpg
+│   ├── finnal render.jpg
+│   ├── final render transparent lid.jpg
+│   ├── inspo.jpg
+│   ├── inspo 2.jpg
+│   ├── inspo 3.jpg
+│   ├── schematic.png
 │
 └── README.md
 ```
