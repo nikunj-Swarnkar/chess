@@ -10,6 +10,51 @@ Designed for **Hack Club Stasis**.
 
 ---
 
+# Project Renders
+
+## Front Render
+
+![Front Render](docs/front_render.png)
+
+## Back Render
+
+![Back Render](docs/back_render.png)
+
+## Internal Layout
+
+![Internal Layout](docs/internal_layout.png)
+
+## Prototype
+
+![Prototype](docs/prototype.jpg)
+
+---
+
+# Final Assembly
+
+The Pocket Chess console is assembled inside a compact 3D printed enclosure designed for portability and comfortable handheld gameplay.
+
+The ESP32-S3 controls the display, handles chess logic, reads button input, and manages save data storage.
+
+The device is powered using a rechargeable LiPo battery with onboard charging support.
+
+## Final Device Features
+
+- Portable handheld design
+- Battery powered
+- Instant boot into chess
+- Physical button controls
+- Save/load support
+- Compact travel-friendly size
+
+### Assembled Device
+
+![Assembly Front](docs/assembly_front.jpg)
+
+![Assembly Back](docs/assembly_back.jpg)
+
+---
+
 ## Features
 
 - Play full chess games on a handheld device  
@@ -23,7 +68,7 @@ Designed for **Hack Club Stasis**.
 
 ---
 
-## Hardware Used
+# Hardware Used
 
 - **ESP32-S3 Mini**
 - **2" ST7789 SPI TFT Display (240x320)**
@@ -33,6 +78,34 @@ Designed for **Hack Club Stasis**.
 - Power switch
 - Jumper wires / custom PCB
 - 3D printed enclosure
+
+---
+
+# Bill of Materials
+
+| Part | Purpose | Quantity | Cost (USD) |
+|------|------|------|------|
+| ZY-201 830 Points Solderless Breadboard | Breadboard for testing parts | 1 | $5.67 |
+| M3 Allen Button Head SS304 Assorted Box | Screws | 1 | $2.55 |
+| XY-016 2A DC-DC Step Up Power Module | Voltage controller | 1 | $0.39 |
+| Waveshare ESP32-S3 Mini Development Board | Main microcontroller | 1 | $6.80 |
+| Tactile Push Button Switch 6x6x5 | Controls / Input buttons | 1 Pack | $0.14 |
+| WLY103048 3.7V 1500mAh 1S LiPo Battery | Battery power | 1 | $2.90 |
+| SS-A0322SG-9R2BB-XKB Slide Switch | Power switch | 1 | $0.21 |
+| SmartElex TP4056 Li-ion Battery Charger Module | Charging board | 1 | $1.60 |
+| GoldenMorning ST7789V 2.0" 240x320 SPI TFT Display | Display | 1 | $8.30 |
+
+## Total Estimated Cost
+
+**~$28.56 USD**
+
+---
+
+# Wiring Diagram
+
+The following diagram shows the wiring connections between the ESP32-S3, TFT display, buttons, and power system.
+
+![Wiring Diagram](docs/wiring_diagram.png)
 
 ---
 
@@ -122,6 +195,11 @@ Pocket-Chess/
 │
 ├── docs/
 │   ├── wiring_diagram.png
+│   ├── front_render.png
+│   ├── back_render.png
+│   ├── internal_layout.png
+│   ├── assembly_front.jpg
+│   ├── assembly_back.jpg
 │
 └── README.md
 ```
@@ -133,7 +211,7 @@ Pocket-Chess/
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/pocket-chess.git
+git clone https://github.com/nikunj-Swarnkar/chess.git
 ```
 
 Upload the code to your ESP32 and start playing.
@@ -143,7 +221,10 @@ Upload the code to your ESP32 and start playing.
 ## Credits
 
 Built for Hack Club Stasis.
-I based my project on https://github.com/codewitch-honey-crisis/pocket_chess work ! 
+
+This project was inspired by:
+https://github.com/codewitch-honey-crisis/pocket_chess
+
 ---
 
 ## License
