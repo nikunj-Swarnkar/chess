@@ -20,13 +20,7 @@ Designed for **Hack Club Stasis**.
 
 ![Transparent Lid Render](assets/final%20render%20transparent%20lid.jpg)
 
-## Inspiration Images
 
-![Inspiration 1](assets/inspo.jpg)
-
-![Inspiration 2](assets/inspo%202.jpg)
-
-![Inspiration 3](assets/inspo%203.jpg)
 
 ---
 
