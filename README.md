@@ -223,7 +223,7 @@ Upload the code to your ESP32 and start playing.
 ![exteriour back](assets/IMG20260702104838.jpg)
 ![pause menu](assets/IMG20260702104731.jpg)
 ![save state](assets/IMG20260702104734.jpg)
-![check](IMG20260702104818.jpg)
+![check](assets/IMG20260702104818.jpg)
 
 
 ---
