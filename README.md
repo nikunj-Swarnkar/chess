@@ -216,14 +216,14 @@ Upload the code to your ESP32 and start playing.
 
 ## Final build 
 
-![](IMG20260702024445.jpg)
-![](IMG20260702024513.jpg)
-![](assets/IMG20260702104556[1].jpg)
-![](assets/IMG20260702104829.jpg)
-![](assets/IMG20260702104838.jpg)
-![](assets/IMG20260702104731.jpg)
-![](assets/IMG20260702104734.jpg)
-
+![main menu ](IMG20260702024445.jpg)
+![working ](IMG20260702024513.jpg)
+![take care of the ribon cable as its fragual](assets/IMG20260702104556[1].jpg)
+![charnging port](assets/IMG20260702104829.jpg)
+![exteriour back](assets/IMG20260702104838.jpg)
+![pause menu](assets/IMG20260702104731.jpg)
+![save state](assets/IMG20260702104734.jpg)
+![check](IMG20260702104818.jpg)
 
 
 ---
