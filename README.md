@@ -218,7 +218,7 @@ Upload the code to your ESP32 and start playing.
 
 ![](IMG20260702024445.jpg)
 ![](IMG20260702024513.jpg)
-<img width="1074" height="1431" alt="IMG20260702104556" src="https://github.com/user-attachments/assets/d427c9d0-75a2-42f0-b2db-7dfe36290102" />
+<img width="1074" height="1431" alt="IMG20260702104556[1]" src="https://github.com/user-attachments/assets/d427c9d0-75a2-42f0-b2db-7dfe36290102" />
 ![](IMG20260702104829.jpg)
 ![](IMG20260702104838.jpg)
 ![](IMG20260702104731.jpg)
