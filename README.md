@@ -214,6 +214,13 @@ Upload the code to your ESP32 and start playing.
 
 ---
 
+## Final build 
+
+![](IMG20260702024445.jpg)
+![](IMG20260702024513.jpg)
+
+---
+
 ## Credits
 
 Built for Hack Club Stasis.
