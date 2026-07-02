@@ -218,10 +218,10 @@ Upload the code to your ESP32 and start playing.
 
 ![](IMG20260702024445.jpg)
 ![](IMG20260702024513.jpg)
-![](IMG20260702104556[1].jpg)
-![](IMG20260702104829.jpg)
-![](IMG20260702104838.jpg)
-![](IMG20260702104731.jpg)
+![](assets/IMG20260702104556[1].jpg)
+![](assets/IMG20260702104829.jpg)
+![](assets/IMG20260702104838.jpg)
+![](assets/IMG20260702104731.jpg)
 
 ---
 
